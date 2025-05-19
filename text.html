@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LWT - 算法工程师</title>
+    <style>
+        /* 全局样式 */
+        :root {
+            --primary-color: #a23838; /* RGB(162,56,56) */
+            --secondary-color: #ca7d66; /* RGB(202,125,102) */
+            --text-color: #333;
+            --light-gray: #f5f5f5;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: "KaiTi", "楷体", serif;
+            font-weight: normal;
+        }
+        
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+        
+        a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--secondary-color);
+            margin: 15px auto;
+        }
+        
+        /* 导航栏 */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-family: "KaiTi", "楷体", serif;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            font-size: 1rem;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary-color);
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+        
+        /* 首屏展示 */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1558002038-1055907df827?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            color: var(--white);
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease;
+        }
+        
+        .hero-content h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--secondary-color);
+            animation: fadeInDown 1s ease 0.3s both;
+        }
+        
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease 0.6s both;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: var(--transition);
+            animation: fadeIn 1s ease 0.9s both;
+        }
+        
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 关于我 */
+        #about {
+            background-color: var(--light-gray);
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+            padding-right: 40px;
+        }
+        
+        .about-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .about-text p {
+            margin-bottom: 15px;
+        }
+        
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+        
+        .about-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 专业经历 */
+        .experience-item {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+        
+        .experience-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .experience-header h3 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .experience-header .date {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        .experience-header .position {
+            width: 100%;
+            font-style: italic;
+            margin-top: 5px;
+            color: #666;
+        }
+        
+        .experience-content ul {
+            list-style-position: inside;
+            padding-left: 20px;
+        }
+        
+        .experience-content li {
+            margin-bottom: 10px;
+        }
+        
+        /* 技能 */
+        #skills {
+            background-color: var(--light-gray);
+        }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .skill-category {
+            flex: 1;
+            min-width: 300px;
+            margin-bottom: 30px;
+            padding: 0 15px;
+        }
+        
+        .skill-category h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        .skill-item {
+            margin-bottom: 15px;
+        }
+        
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .skill-bar {
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .skill-progress {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 5px;
+            transition: width 1.5s ease;
+        }
+        
+        /* 项目展示 */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .project-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .project-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+        }
+        
+        .project-content {
+            padding: 20px;
+        }
+        
+        .project-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .project-content p {
+            margin-bottom: 15px;
+        }
+        
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .project-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            background: var(--light-gray);
+            border-radius: 30px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        /* 教育背景 */
+        #education {
+            background-color: var(--light-gray);
+        }
+        
+        .education-item {
+            display: flex;
+            margin-bottom: 30px;
+            background: var(--white);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .education-icon {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-right: 30px;
+            min-width: 60px;
+        }
+        
+        .education-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .education-content .date {
+            color: var(--secondary-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        /* 联系方式 */
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+            padding-right: 30px;
+        }
+        
+        .contact-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .contact-details {
+            margin-bottom: 30px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .contact-icon {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-right: 15px;
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .contact-form {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(202, 125, 102, 0.2);
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        /* 页脚 */
+        footer {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 50px 0 20px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            margin-bottom: 30px;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .social-links li {
+            margin: 0 15px;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .about-text {
+                padding-right: 0;
+                margin-bottom: 30px;
+            }
+            
+            .about-image {
+                margin-top: 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: var(--white);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: var(--transition);
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content h2 {
+                font-size: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .education-item {
+                flex-direction: column;
+            }
+            
+            .education-icon {
+                margin-right: 0;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-content h2 {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .experience-header {
+                flex-direction: column;
+            }
+            
+            .experience-header .date {
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">LWT</div>
+                <ul class="nav-links">
+                    <li><a href="#hero">首页</a></li>
+                    <li><a href="#about">关于我</a></li>
+                    <li><a href="#experience">专业经历</a></li>
+                    <li><a href="#skills">技能</a></li>
+                    <li><a href="#projects">项目展示</a></li>
+                    <li><a href="#education">教育背景</a></li>
+                    <li><a href="#contact">联系方式</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 首屏展示 -->
+    <section id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>LWT</h1>
+                <h2>算法工程师</h2>
+                <p>专注于无人机硬件性能优化、传感器数据融合和故障预测算法的研究与开发</p>
+                <a href="#contact" class="btn">联系我</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">关于我</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>算法工程师 | 无人机技术专家</h3>
+                    <p>我是一名专注于无人机硬件算法开发的工程师，在大疆创新拥有丰富的实战经验。我的专长包括飞行控制优化、传感器数据融合和硬件故障预测等领域。</p>
+                    <p>通过机器学习和大数据分析技术，我致力于提升无人机在复杂环境下的飞行稳定性和硬件可靠性。我的工作不仅限于算法开发，还包括硬件测试流程的优化与自动化。</p>
+                    <p>我热爱技术创新，善于将理论研究成果转化为实际应用，为无人机性能提升做出贡献。</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1558002038-1055907df827?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="LWT">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 专业经历 -->
+    <section id="experience">
+        <div class="container">
+            <h2 class="section-title">专业经历</h2>
+            <div class="experience-item">
+                <div class="experience-header">
+                    <h3>大疆创新</h3>
+                    <span class="date">2021.07 - 至今</span>
+                    <span class="position">算法工程师</span>
+                </div>
+                <div class="experience-content">
+                    <ul>
+                        <li><strong>无人机硬件性能优化项目</strong> - 开发飞行控制优化算法，提升复杂环境下飞行稳定性 <strong>25%</strong></li>
+                        <li><strong>无人机硬件性能优化项目</strong> - 主导硬件故障预测与诊断系统研发，基于大数据分析与机器学习构建预测模型，实现硬件故障预测准确率 <strong>80%</strong></li>
+                        <li><strong>新一代无人机硬件研发项目</strong> - 设计多传感器数据融合算法，提升飞行器环境感知能力 <strong>40%</strong></li>
+                        <li><strong>硬件测试与验证算法优化</strong> - 开发自动化硬件测试算法，优化测试流程，提升测试效率 <strong>30%</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技能 -->
+    <section id="skills">
+        <div class="container">
+            <h2 class="section-title">技能专长</h2>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h3>编程语言</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>Python</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>C++</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>MATLAB</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>算法领域</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>传感器数据融合</span>
+                            <span>95%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 95%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>故障预测</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>控制算法优化</span>
+                            <span>88%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 88%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>工具框架</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>TensorFlow</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>PyTorch</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span>ROS</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目展示 -->
+    <section id="projects">
+        <div class="container">
+            <h2 class="section-title">项目展示</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1507582020474-9a35b7d455d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="无人机飞行控制优化">
+                    </div>
+                    <div class="project-content">
+                        <h3>无人机飞行控制优化</h3>
+                        <p>开发先进的飞行控制算法，显著提升无人机在复杂环境下的飞行稳定性。</p>
+                        <div class="project-tags">
+                            <span class="project-tag">控制算法</span>
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">稳定性优化</span>
+                        </div>
+                        <p><strong>成果：</strong>飞行稳定性提升25%</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="硬件故障预测系统">
+                    </div>
+                    <div class="project-content">
+                        <h3>硬件故障预测系统</h3>
+                        <p>基于大数据分析和机器学习构建的硬件故障预测与诊断系统。</p>
+                        <div class="project-tags">
+                            <span class="project-tag">机器学习</span>
+                            <span class="project-tag">TensorFlow</span>
+                            <span class="project-tag">预测模型</span>
+                        </div>
+                        <p><strong>成果：</strong>故障预测准确率80%</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="多传感器数据融合">
+                    </div>
+                    <div class="project-content">
+                        <h3>多传感器数据融合</h3>
+                        <p>设计并实现多传感器数据融合算法，显著提升飞行器环境感知能力。</p>
+                        <div class="project-tags">
+                            <span class="project-tag">数据融合</span>
+                            <span class="project-tag">C++</span>
+                            <span class="project-tag">环境感知</span>
+                        </div>
+                        <p><strong>成果：</strong>环境感知能力提升40%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 教育背景 -->
+    <section id="education">
+        <div class="container">
+            <h2 class="section-title">教育背景</h2>
+            <div class="education-item">
+                <div class="education-icon">🎓</div>
+                <div class="education-content">
+                    <h3>上海大学</h3>
+                    <div class="date">2018.06 - 2021.09</div>
+                    <p><strong>计算机科学 硕士</strong></p>
+                    <p><strong>核心课程：</strong>机器学习、深度学习</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">联系方式</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>与我联系</h3>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon">📞</div>
+                            <div>电话：1008611</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">✉️</div>
+                            <div>邮箱：1008611@qq.com</div>
+                        </div>
+                    </div>
+                    <p>如果您对我的工作感兴趣或有任何问题，请随时通过以上方式与我联系。我期待与您交流无人机算法开发或相关技术合作的机会。</p>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="您的姓名" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="您的邮箱" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="主题">
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" placeholder="您的留言" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">发送消息</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <h2>LWT</h2>
+                <p>算法工程师 | 无人机技术专家</p>
+            </div>
+            <ul class="social-links">
+                <li><a href="#">LinkedIn</a></li>
+                <li><a href="#">GitHub</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">WeChat</a></li>
+            </ul>
+            <div class="copyright">
+                &copy; 2023 LWT. 保留所有权利。
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            }
+        });
+
+        // 移动端菜单切换
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        hamburger.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    hamburger.classList.remove('active');
+                }
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 技能条动画
+        function animateSkills() {
+            const skillBars = document.querySelectorAll('.skill-progress');
+            skillBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            });
+        }
+
+        // 当技能部分进入视口时触发动画
+        const skillsSection = document.getElementById('skills');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateSkills();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        observer.observe(skillsSection);
+
+        // 表单提交
+        const contactForm = document.getElementById('contactForm');
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('感谢您的留言！我会尽快回复您。');
+            this.reset();
+        });
+
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 0.5s ease';
+    </script>
+</body>
+</html>
